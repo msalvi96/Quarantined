@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "56673548104",
+    "firebase_url": "https://quarantined-f29a7.firebaseio.com",
+    "project_id": "quarantined-f29a7",
+    "storage_bucket": "quarantined-f29a7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56673548104:android:775855896e5118b341a57d",
+        "android_client_info": {
+          "package_name": "com.msalvi.quarantined"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56673548104-lguipfroa1kloa8o59d2chrasdosaoii.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.msalvi.quarantined",
+            "certificate_hash": "e1ad59ee60d19f2fb3c1454048929dfbe153973b"
+          }
+        },
+        {
+          "client_id": "56673548104-cged8m9b4il2j5etudem5sb93ioqfkro.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9FAfEJBwGZVeCJ4WhsofwRp60ylbs0LA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "56673548104-cged8m9b4il2j5etudem5sb93ioqfkro.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
