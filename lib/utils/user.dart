@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:quarantined/models/user.dart';
+// import 'package:quarantined/models/user.dart';
 
 class UserService {
   var _db = Firestore.instance.collection('users');
@@ -15,6 +15,10 @@ class UserService {
       "geoPoint": GeoPoint(latitude, longitude),
     });
     return await getUserById(profileId);
+  }
+
+  getUserByReference(DocumentReference userIdRef) async {
+    return await userIdRef.get();
   }
 
 }

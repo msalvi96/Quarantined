@@ -8,6 +8,7 @@ import 'package:quarantined/pages/create_request.dart';
 import 'package:quarantined/pages/information.dart';
 import 'package:quarantined/pages/local_requests.dart';
 import 'package:quarantined/utils/auth.dart';
+import 'package:quarantined/utils/requests.dart';
 import 'package:quarantined/utils/user.dart';
 import 'package:quarantined/widgets/progress.dart';
 
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     super.initState();
     getCurrentUser();
   }
+
 
   Future<Position> _getLocation() async {
     var currentPosition;
@@ -142,6 +144,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
         children: <Widget>[
           InformationPage(),
           LocalRequests(),
+          // Container(),
         ],
         controller: _tabController,
       ),
