@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quarantined/models/essentials.dart';
+import 'package:quarantined/models/general.dart';
 import 'package:quarantined/models/grocery.dart';
+import 'package:quarantined/models/organization.dart';
 import 'package:rxdart/rxdart.dart';
 
 class RequestService {
+  var _instance = Firestore.instance.collection('requests');
   var _db = Firestore.instance.collection('requests').snapshots();
   Observable<List<dynamic>> allRequests;
   PublishSubject loading = PublishSubject();
@@ -11,211 +14,6 @@ class RequestService {
   RequestService() {
     allRequests = Observable(getRequestFromFirestore());
   }
-  List<dynamic> requests = [
-    {
-      'type': 'grocery',
-      'veggies': 'potatoes',
-      'bread': 'burger buns',
-      'essentials': 'flour',
-      'meat': 'chicken',
-      'condiments': 'pepper',
-      'dairy': 'milk',
-      'salads': 'spinach',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 37.4219983,
-      'longitude': -122.084,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'grocery',
-      'veggies': 'beans',
-      'bread': 'brown bread',
-      'essentials': 'oil',
-      'meat': 'pork',
-      'condiments': 'salt',
-      'dairy': 'cheese',
-      'salads': 'spinach',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 39.4219983,
-      'longitude': -121.084,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'grocery',
-      'veggies': 'mushrooms',
-      'bread': 'white bread',
-      'essentials': 'juices',
-      'meat': 'red meat',
-      'condiments': 'pepper',
-      'dairy': 'cheese',
-      'salads': 'spring mix',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 35.4219983,
-      'longitude': -129.084,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'grocery',
-      'veggies': 'Tomatoes',
-      'bread': 'bagel',
-      'essentials': 'flour',
-      'meat': 'sausages',
-      'condiments': 'salt',
-      'dairy': 'ice cream',
-      'salads': 'spring mix',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 37.4219983,
-      'longitude': -122.084,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'essentials',
-      'toiletPaper': 2,
-      'masks': 3,
-      'handSanitizers': 1,
-      'medicines': 'This is a test medicine description',
-      'description': 'This is a general test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 30.4219983,
-      'longitude': -120.084,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'essentials',
-      'toiletPaper': 2,
-      'masks': 1,
-      'handSanitizers': 3,
-      'medicines': 'This is a test medicine description',
-      'description': 'This is a general test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 35.5319983,
-      'longitude': -121.184,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'essentials',
-      'toiletPaper': 2,
-      'masks': 3,
-      'handSanitizers': 1,
-      'medicines': 'This is a test medicine description',
-      'description': 'This is a general test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 39.4219983,
-      'longitude': -121.084,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'general',
-      'title': 'General Request 1',
-      'subtitle': 'This is a test general request',
-      'description': 'This is a general test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 25.5219983,
-      'longitude': -115.574,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'general',
-      'title': 'General Request 2',
-      'subtitle': 'This is a test general request',
-      'description': 'This is a general test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 35.5219983,
-      'longitude': -110.574,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'general',
-      'title': 'General Request 3',
-      'subtitle': 'This is a test general request',
-      'description': 'This is a general test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 45.5219983,
-      'longitude': -110.574,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'Organization',
-      'title': 'Org Request 1',
-      'subtitle': 'This is a test org request',
-      'masks': 350,
-      'volunteers': 100,
-      'handSanitizers': 20,
-      'medicines': 'This is a test medicine description',
-      'description': 'This is a org test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 37.8219983,
-      'longitude': -116.574,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'Organization',
-      'title': 'Org Request 2',
-      'subtitle': 'This is a test org request',
-      'masks': 115,
-      'volunteers': 50,
-      'handSanitizers': 20,
-      'medicines': 'This is a test medicine description',
-      'description': 'This is a org test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 33.4219983,
-      'longitude': -117.574,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-    {
-      'type': 'Organization',
-      'title': 'Org Request 3',
-      'subtitle': 'This is a test org request',
-      'masks': 150,
-      'volunteers': 200,
-      'handSanitizers': 50,
-      'medicines': 'This is a test medicine description',
-      'description': 'This is a org test description',
-      'userId' : 'PwUq6IVVMhae2mmGLiH9e6sea1K2',
-      'userDisplayName': 'Mrunal Salvi',
-      'userAddress': '19 Lincoln Street',
-      'latitude': 34.9219983,
-      'longitude': -119.574,
-      'photoURL': 'https://lh3.googleusercontent.com/a-/AOh14GjHqBZZ2FOhS400wLjK5o8MGgdy2nAI6FdSwrDUyw=s96-c'
-    },
-  ];
-
-  List<dynamic> getRequests() {
-    return requests;
-  }
-  // getRequestsFromFirestore() async {
-  //   // List<dynamic> newOne = List<dynamic>();
-  //   // await _db.getDocuments().then((snap) {
-  //   //   snap.documents.map((doc) {
-  //   //     newOne.add(doc.data);
-  //   //   });
-  //   // });
-  //   // return newOne;
-  // }
 
   Stream<List<dynamic>> getRequestFromFirestore() {
     return _db.map((qshot) => qshot.documents.map((doc) {
@@ -223,8 +21,71 @@ class RequestService {
         return Grocery.fromDocument(doc);
       } else if (doc.data['type'] == 'essentials') {
         return Essentials.fromDocument(doc);
+      } else if (doc.data['type'] == 'general') {
+        return General.fromDocument(doc);
+      } else if (doc.data['type'] == 'organization') {
+        return Organization.fromDocument(doc);
       }
     }).toList());
+  }
+
+  uploadGroceryForm(Grocery request) async {
+    return await _instance.document().setData({
+      'type': 'grocery',
+      'cart': request.cart,
+      'contactInfo': request.contactInfo,
+      'latitude': request.latitude,
+      'longitude': request.longitude,
+      'datePublished': request.datePublished,
+      'expiryDate': request.expiryDate,
+    });
+  }
+
+  uploadEssentialsForm(Essentials request) async {
+    return await _instance.document().setData({
+      'type': 'essentials',
+      'latitude': request.latitude,
+      'longitude': request.longitude,
+      'contactInfo': request.contactInfo,
+      'medicines': request.medicines,
+      'description': request.description,
+      'datePublished': request.datePublished,
+      'expiryDate': request.expiryDate,
+      'handSanitizers': request.handSanitizers,
+      'toiletPaper': request.toiletPaper,
+      'masks': request.masks,
+    });
+  }
+
+  uploadGeneralForm(General request) async {
+    return await _instance.document().setData({
+      'type': 'general',
+      'latitude': request.latitude,
+      'longitude': request.longitude,
+      'contactInfo': request.contactInfo,
+      'title': request.title,
+      'subject': request.subject,
+      'priority': request.priority,
+      'description': request.description,
+      'datePublished': request.datePublished,
+      'expiryDate': request.expiryDate,
+    });
+  }
+
+  uploadOrganizationForm(Organization request) async {
+    return await _instance.document().setData({
+      'type': 'organization',
+      'latitude': request.latitude,
+      'longitude': request.longitude,
+      'contactInfo': request.contactInfo,
+      'description': request.description,
+      'medicines': request.medicines,
+      'masks': request.masks,
+      'volunteers': request.volunteers,
+      'handSanitizers': request.handSanitizers,
+      'datePublished': request.datePublished,
+      'expiryDate': request.expiryDate,
+    });
   }
 }
 

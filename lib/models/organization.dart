@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Essentials {
-  final String type = 'essentials';
+class Organization {
+  final String type = 'organization';
   final String description;
   final String medicines;
   final int masks;
-  final int toiletPaper;
+  final int volunteers;
   final int handSanitizers;
   final double latitude;
   final double longitude;
@@ -13,11 +13,11 @@ class Essentials {
   final int expiryDate;
   final Map<dynamic, dynamic> contactInfo;
 
-  Essentials({
+  Organization({
     this.description,
     this.medicines,
     this.masks,
-    this.toiletPaper,
+    this.volunteers,
     this.handSanitizers,
     this.longitude,
     this.latitude,
@@ -27,12 +27,12 @@ class Essentials {
   });
 
   //deserialization - take a document snapshot and create an instance of user class
-  factory Essentials.fromDocument(DocumentSnapshot doc) {
-    return Essentials(
+  factory Organization.fromDocument(DocumentSnapshot doc) {
+    return Organization(
       description: doc['description'],
       medicines: doc['medicines'],
       masks: doc['masks'],
-      toiletPaper: doc['toiletPaper'],
+      volunteers: doc['volunteers'],
       handSanitizers: doc['handSanitizers'],
       latitude: doc['latitude'],
       longitude: doc['longitude'],

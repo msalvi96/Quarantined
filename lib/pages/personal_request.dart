@@ -1,8 +1,21 @@
-import 'package:dropdown_formfield/dropdown_formfield.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quarantined/pages/contact_screen.dart';
 import 'package:quarantined/utils/data.dart';
 import 'package:quarantined/widgets/counter.dart';
+
+List<String> groceryEssentials = [
+    "Brown Rice",
+    "White Rice",
+    "All Purpose Flour",
+    "Pasta",
+    "Cooking Oil",
+    "Juices",
+    "Protein Bars",
+    "Nutella",
+    "Peanut Butter",
+  ];
 
 class PersonalRequest extends StatefulWidget {
   PersonalRequest({Key key}) : super(key: key);
@@ -15,23 +28,9 @@ class _PersonalRequestState extends State<PersonalRequest> {
   
   List<bool> isSelected = [true, false];
   List<String> toggleList = ["grocery", "essentials"];
-  
+  bool isLoading = false;
   bool isGrocery = true;
-
-  String veggies;
-  String bread;
-  String essentials;
-  String meat;
-  String salads;
-  String condiments;
-  String dairy;
-  final _veggiesKey = GlobalKey<FormState>();
-  final _breadKey = GlobalKey<FormState>();
-  final _groceryEssentialsKey = GlobalKey<FormState>();
-  final _meatKey = GlobalKey<FormState>();
-  final _saladsKey = GlobalKey<FormState>();
-  final _dairyKey = GlobalKey<FormState>();
-  final _condimentsKey = GlobalKey<FormState>();
+  Geolocator geolocator = Geolocator();
 
   final _essentialsKey = GlobalKey<FormState>();
   int toiletPaper;
@@ -40,308 +39,177 @@ class _PersonalRequestState extends State<PersonalRequest> {
   String medicines;
   String description;
 
+  List<dynamic> myList = [];
+  List<dynamic> yourList = [];
+
   @override
   void initState() { 
     super.initState();
-    veggies = '';
-    bread = '';
-    essentials = '';
-    meat = '';
-    salads = '';
-    condiments = '';
-    dairy = '';
+    toiletPaper = 0;
+    masks = 0;
+    handSanitizers = 0;
+    medicines = '';
+    description = '';
+    myList = dataService.getEssentials();
+    yourList = [];
   }
 
-  buildGroceryForm() {
+  addToCart(String item) {
+    if (yourList.length < 5) {
+      setState(() {
+        yourList.add(item);
+        myList.remove(item);
+      });
+      print('list length ${yourList.length}');
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Container(
+              child: Text("You cannot request for more than 5 items"),
+            ),
+          );
+        }
+      );
+    }
+  }
+  
+  removeFromCart(String item) {
+    setState(() {
+      myList.add(item);
+      yourList.remove(item);
+    });
+  }
+
+
+  buildGrocery() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Container(
-          padding: EdgeInsets.all(5.0),
-          child: Form(
-            key: _groceryEssentialsKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: DropDownFormField(
-                    titleText: 'Grocery Essentials',
-                    hintText: 'Please choose one or none',
-                    value: essentials,
-                    onSaved: (value) {
-                      setState(() {
-                        essentials = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        essentials = value;
-                      });
-                    },
-                    dataSource: dataService.getEssentials(),
-                    textField: 'display',
-                    valueField: 'value',
+          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+          height: MediaQuery.of(context).size.height * 0.15,
+          child: yourList.length == 0 ? Card(
+            child: Container(
+              child: Center(child: Text("No items added"),),
+            ),
+          ) : ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: yourList.length,
+            itemBuilder: (context, index) {
+              return Container(
+                width: MediaQuery.of(context).size.width * 0.3,
+                child: Card(
+                  color: Colors.blue,
+                  child: Container(
+                    child: Center(child: Text(yourList[index]),),
                   ),
                 ),
-              ],
-            ),
+              );
+            }
           ),
         ),
-        Container(
-          padding: EdgeInsets.all(5.0),
-          child: Form(
-            key: _veggiesKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: DropDownFormField(
-                    titleText: 'Veggies',
-                    hintText: 'Please choose one or none',
-                    value: veggies,
-                    onSaved: (value) {
-                      setState(() {
-                        veggies = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        veggies = value;
-                      });
-                    },
-                    dataSource: dataService.getVeggies(),
-                    textField: 'display',
-                    valueField: 'value',
+        ListView(
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+//          mainAxisSize: MainAxisSize.max,
+//          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ListView.builder(
+              itemCount: myList.length,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Card(
+                  color: Colors.white,
+                  child: ListTile(
+                    title: Text(myList[index]),
+                    onTap: () => addToCart(myList[index]),
                   ),
-                ),
-              ],
+                );
+              }
             ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(5.0),
-          child: Form(
-            key: _meatKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                  child: DropDownFormField(
-                    titleText: 'Meat',
-                    hintText: 'Please choose one or none',
-                    value: meat,
-                    onSaved: (value) {
-                      setState(() {
-                        meat = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        meat = value;
-                      });
-                    },
-                    dataSource: dataService.getMeat(),
-                    textField: 'display',
-                    valueField: 'value',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(5.0),
-          child: Form(
-            key: _dairyKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: DropDownFormField(
-                    titleText: 'Dairy',
-                    hintText: 'Please choose one or none',
-                    value: dairy,
-                    onSaved: (value) {
-                      setState(() {
-                        dairy = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        dairy = value;
-                      });
-                    },
-                    dataSource: dataService.getDairy(),
-                    textField: 'display',
-                    valueField: 'value',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(5.0),
-          child: Form(
-            key: _breadKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: DropDownFormField(
-                    titleText: 'Bread',
-                    hintText: 'Please choose one or none',
-                    value: bread,
-                    onSaved: (value) {
-                      setState(() {
-                        bread = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        bread = value;
-                      });
-                    },
-                    dataSource: dataService.getBreads(),
-                    textField: 'display',
-                    valueField: 'value',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(5.0),
-          child: Form(
-            key: _saladsKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: DropDownFormField(
-                    titleText: 'Salads',
-                    hintText: 'Please choose one or none',
-                    value: salads,
-                    onSaved: (value) {
-                      setState(() {
-                        salads = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        salads = value;
-                      });
-                    },
-                    dataSource: dataService.getSalads(),
-                    textField: 'display',
-                    valueField: 'value',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(5.0),
-          child: Form(
-            key: _condimentsKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: DropDownFormField(
-                    titleText: 'Condiments',
-                    hintText: 'Please choose one or none',
-                    value: condiments,
-                    onSaved: (value) {
-                      setState(() {
-                        condiments = value;
-                      });
-                    },
-                    onChanged: (value) {
-                      setState(() {
-                        condiments = value;
-                      });
-                    },
-                    dataSource: dataService.getCondiments(),
-                    textField: 'display',
-                    valueField: 'value',
-                  ),
-                ),
-              ],
-            ),
-          ),
+          ],
         ),
       ],
     );
   }
 
-
   buildEssentialsForm() {
-    return Center(
+    return Container(
       child: Form(
         key: _essentialsKey,
         child: Padding(
           padding: EdgeInsets.all(15.0),
           child: Column(
             children: <Widget>[
-              Text('Sanitary Masks'),
-              CounterFormField(
-                onSaved: (value) {
+              Text(
+                  'Sanitary Masks: $masks',
+                style: TextStyle(
+                  fontSize: 15.0,
+                ),
+              ),
+              SizedBox(height: 5.0,),
+              Slider(
+                value: masks.toDouble(),
+                min: 0.0,
+                max: 5.0,
+                divisions: 5,
+                label: "$masks",
+                onChanged: (double value) {
                   setState(() {
-                    masks = value;
+                    masks = value.toInt();
                   });
                 },
-                autovalidate: true,
-                validator: (value) {
-                  if (value < 0) {
-                    return 'Negative values not supported';
-                  } else if (value > 2) {
-                    return 'Requests over 4 are not accepted';
-                  }
-                },
+                activeColor: Colors.red,
+                inactiveColor: Colors.red,
               ),
-              Text('Hand Sanitizers'),
-              CounterFormField(
-                autovalidate: true,
-                onSaved: (value) {
+              SizedBox(height: 5.0,),
+              Text('Hand Sanitizers: $handSanitizers', style: TextStyle(fontSize: 15.0),),
+              SizedBox(height: 5.0,),
+              Slider(
+                value: handSanitizers.toDouble(),
+                min: 0.0,
+                max: 5.0,
+                divisions: 5,
+                label: "$handSanitizers",
+                onChanged: (double value) {
                   setState(() {
-                    handSanitizers = value;
+                    handSanitizers = value.toInt();
                   });
                 },
-                validator: (value) {
-                  if (value < 0) {
-                    return 'Negative values not supported';
-                  } else if (value > 4) {
-                    return 'Requests over 4 are not accepted';
-                  }
-                },
+                activeColor: Colors.red,
+                inactiveColor: Colors.red,
               ),
-              Text('Toilet Paper'),
-              CounterFormField(
-                autovalidate: true,
-                onSaved: (value) {
+              SizedBox(height: 5.0,),
+              Text('Toilet Paper', style: TextStyle(fontSize: 15.0),),
+              SizedBox(height: 5.0,),
+              Slider(
+                value: toiletPaper.toDouble(),
+                min: 0.0,
+                max: 5.0,
+                divisions: 5,
+                label: "$toiletPaper",
+                onChanged: (double value) {
                   setState(() {
-                    toiletPaper = value;
+                    toiletPaper = value.toInt();
                   });
                 },
-                validator: (value) {
-                  if (value < 0) {
-                    return 'Negative values not supported';
-                  } else if (value > 4) {
-                    return 'Requests over 4 are not accepted';
-                  }
-                },
+                activeColor: Colors.red,
+                inactiveColor: Colors.red,
               ),
-              Text('Medicine Description'),
+              SizedBox(height: 5.0,),
+              Text('Medicine Description', style: TextStyle(fontSize: 15.0),),
+              SizedBox(height: 5.0,),
               TextFormField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Briefly describe your request.',
+                    helperText: 'Use this section to explain your request',
+                    labelText: 'Description'
+                ),
                 autovalidate: true,
                 onSaved: (value) {
                   setState(() {
@@ -354,9 +222,18 @@ class _PersonalRequestState extends State<PersonalRequest> {
                   }
                 }
               ),
-              Text('General Description'),
+              SizedBox(height: 5.0,),
+              Text('General Description', style: TextStyle(fontSize: 15.0),),
+              SizedBox(height: 5.0,),
               TextFormField(
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Briefly describe your request.',
+                  helperText: 'Use this section to explain your request',
+                  labelText: 'Description'
+                ),
                 autovalidate: true,
+                maxLines: 3,
                 onSaved: (value) {
                   setState(() {
                     description = value;
@@ -373,14 +250,37 @@ class _PersonalRequestState extends State<PersonalRequest> {
         ),
       ),
     );
+  }
 
+  saveRequest() {
+    Map<String, dynamic> request;
+    if (isGrocery == true && yourList.length != 0) {
+      request = {
+        'type': 'grocery',
+        'cart': yourList,
+      };
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ContactScreen(request: request,)));
+    }
+
+    if (isGrocery == false && _essentialsKey.currentState.validate()) {
+      _essentialsKey.currentState.save();
+      request = {
+        'type': 'essentials',
+        'description': description,
+        'medicines': medicines,
+        'masks': masks,
+        'toiletPaper': toiletPaper,
+        'handSanitizers': handSanitizers,
+      };
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ContactScreen(request: request)));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: saveRequest,
         label: Text("Save"),
         elevation: 20.0,
         icon: Icon(Icons.save),
@@ -436,7 +336,7 @@ class _PersonalRequestState extends State<PersonalRequest> {
               ),
             ),
           ),
-          isGrocery ? buildGroceryForm() : buildEssentialsForm(),
+          isGrocery ? buildGrocery() : buildEssentialsForm(),
         ],
       ),
     );

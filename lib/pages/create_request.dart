@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quarantined/pages/org_request.dart';
 import 'package:quarantined/pages/personal_request.dart';
 import 'package:quarantined/pages/general_request.dart';
 
@@ -23,13 +24,6 @@ class _CreateRequestsState extends State<CreateRequests> with SingleTickerProvid
     super.dispose();
   }
 
-  buildPersonalRequestForm() {
-    return Container();
-  }
-
-  buildOrgRequestForm() {
-    return Container();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +52,7 @@ class _CreateRequestsState extends State<CreateRequests> with SingleTickerProvid
         children: <Widget>[
           GeneralRequest(),
           PersonalRequest(),
-          buildOrgRequestForm(),
+          OrgRequest(),
         ],
         controller: _tabController,
       ),
