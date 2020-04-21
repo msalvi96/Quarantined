@@ -74,46 +74,15 @@ class DataService {
   ];
 
   List essentials = [
-    {
-      'display': 'Brown Rice',
-      'value': 'Brown Rice',
-    },
-    {
-      'display': 'White Rice',
-      'value': 'White Rice',
-    },
-    {
-      'display': 'All Purpose Flour',
-      'value': 'All Purpose Flour',
-    },
-    {
-      'display': 'Pasta',
-      'value': 'Pasta',
-    },
-    {
-      'display': 'Cooking Oil',
-      'value': 'Cooking Oil',
-    },
-    {
-      'display': 'Juices',
-      'value': 'Juices',
-    },
-    {
-      'display': 'Protein Bars',
-      'value': 'Protein Bars',
-    },
-    {
-      'display': 'Nutella',
-      'value': 'Nutella',
-    },
-    {
-      'display': 'Peanut Butter',
-      'value': 'Peanut Butter',
-    },
-    {
-      'display': 'None',
-      'value': 'None',
-    },
+      'Brown Rice',
+      'White Rice',
+      'All Purpose Flour',
+      'Pasta',
+      'Cooking Oil',
+      'Juices',
+      'Protein Bars',
+      'Nutella',
+      'Peanut Butter',
   ];
 
   List salads = [
